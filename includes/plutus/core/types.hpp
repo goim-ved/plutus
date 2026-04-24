@@ -42,15 +42,15 @@ enum class DigitalPayoffType {
 };
 
 struct OptionParams {
-    Real spot;
-    Real strike;
-    Real rate;
-    Real volatility;
-    Real maturity;
-    OptionType type;
+    Real spot; //stock price
+    Real strike; //price agreed
+    Real rate; //money today > same money a year from now
+    Real volatility; //craziness of the stock price xd
+    Real maturity; //expiry date of the option
+    OptionType type; //call or put
 };
 
-struct PricingResult {
+struct PricingResult { 
     Real price;
     Real delta;
     Real gamma;
