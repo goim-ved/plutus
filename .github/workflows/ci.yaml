@@ -1,0 +1,49 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        name: ${{ matrix.os }} (${{ matrix.compiler }})
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - os: ubuntu-latest
+                      compiler: gcc
+                      cc: gcc-12
+                      cxx: g++-12
+                    - os: windows-latest
+                      compiler: msvc
+                      cc: cl
+                      cxx: cl
+                    - os: macos-latest
+                      compiler: clang
+                      cc: clang
+                      cxx: clang++
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+
+          - name: Setup vcpkg
+            uses: lukka/run-vcpkg@v11
+            with: 
+              vcpkgGitCommitId: f2e1c41da38c71be74ef48684666991929b45418
+            
+          - name: Configure
+            run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Release
+
+          - name: Build 
+            run: cmake --build build --config Release
+
+          - name: Test 
+            run: ctest --test-dir build --output-on-failure -C Release
