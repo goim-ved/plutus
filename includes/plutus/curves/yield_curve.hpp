@@ -1,3 +1,5 @@
+//need to study curves properly before beginning implementation
+
 #pragma once
 
 #include "../core/types.hpp"
@@ -9,8 +11,8 @@ namespace plutus {
 namespace curves {
 
 enum class InterpolationMethod {
-    LogLinear,
-    CubicSpline
+    LogLinear, // straight line between two points
+    CubicSpline // curves :P
 };
 
 struct MarketInstrument
@@ -26,15 +28,15 @@ public:
 
     void add_node(Real maturity, Real discount_factor);
     Real discount_factor(Real maturity) const;
-    Real zero_rate(Real maturity) const;
+    Real zero_rate(Real maturity) const; // giving r for scholes?
     Real forward_rate(Real t1, Real t2) const;
     Size node_count() const;
     void clear();
 
 private:
     InterpolationMethod method_;
-    std::vector<std::pair<Real, Real>> nodes_;
-    mutable bool spline_dirty_;
+    std::vector<std::pair<Real, Real>> nodes_; //time and rate
+    mutable bool spline_dirty_; //true if new node is found
     mutable std::vector<Real> spline_a_;
     mutable std::vector<Real> spline_b_;
     mutable std::vector<Real> spline_c_;
