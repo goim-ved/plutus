@@ -7,7 +7,7 @@
 namespace plutus {
 
 using Real = double;
-using Size = std::size_t;
+using Size = std::size_t; // not using int for performance
 
 enum class OptionType {
     Call,
@@ -15,8 +15,8 @@ enum class OptionType {
 };
 
 enum class ExerciseStyle {
-    European,
-    American
+    European, // need black scholes
+    American // monte carlo?
 };
 
 enum class BarrierType {
@@ -26,7 +26,7 @@ enum class BarrierType {
     DownAndOut
 };
 
-enum class AveragingType {
+enum class AveragingType { // for asian options
     Arithmetic,
     Geometric
 };
